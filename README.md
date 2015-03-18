@@ -14,7 +14,9 @@ Software Requirements
 
 This package has the following dependencies:
 
-	* matplolib
+	* numpy
+	* scipy
+    * matplolib
 
 Known Bug List
 ==============
