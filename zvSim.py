@@ -11,7 +11,7 @@
 
 # built-in modules
 import sys
-sys.path.append('/home/alex/Dropbox/ampPy')
+#sys.path.append('/home/alex/Dropbox/ampPy')
 
 # authored modules
 import rtc
@@ -46,7 +46,7 @@ def quickRun():
 	title('Simulated cc-STS Results, z')
 	grid(True)
 	figure()
-	plot(V, an.deriv(V, Z))
+	plot(V, gradient(Z,V[1]-V[0]))
 	xlabel('Gap Bias (V)')
 	ylabel('dz/dV(V) (V)')
 	title('Simulated cc-STS Reults, dz/dV')
@@ -62,9 +62,9 @@ def scqZV(V, I, T, **params):
 		'w': 0.5, 'rho0': 1.0E-3
 	}
 	# Handle keyword arguments
-	for k in dparams.keys():
+	for k in list(dparams.keys()):
 		# Set all missing keyword arguments to their default values
-		if k not in params.keys():
+		if k not in list(params.keys()):
 			params[k] = dparams[k]
 		elif type(params[k]).__name__ != type(dparams[k]).__name__:
 			raise TypeError(
@@ -116,7 +116,7 @@ def scqZV(V, I, T, **params):
 			-sqrt(32.0/9.0) * z * ((phi+v-E)**1.5 - (phi-E)**1.5) / v
 		)
 	else:
-		print '**transmission function label not reconized!**'
+		print('**transmission function label not reconized!**')
 		raise
 	
 	# tunCurrF: Tunneling current functions
@@ -137,13 +137,13 @@ def scqZV(V, I, T, **params):
 		try:
 			Z[i] = brenth(lambda z: tunCurrF(z, v)-I, z1, z2)
 		except ValueError:
-			print 'V[{0}] = {1:0.3f}V'.format(i, v*cE)
-			print '(z1 = {0:0.5f}nm, I-10 = {1:0.5e}pA)'.format(
+			print('V[{0}] = {1:0.3f}V'.format(i, v*cE))
+			print('(z1 = {0:0.5f}nm, I-10 = {1:0.5e}pA)'.format(
 				z1*cL, (tunCurrF(z1, v)-I)*cI
-			)
-			print '(z2 = {0:0.5f}nm, I-10 = {1:0.5e}pA)'.format(
+			))
+			print('(z2 = {0:0.5f}nm, I-10 = {1:0.5e}pA)'.format(
 				z2*cL, (tunCurrF(z2, v)-I)*cI
-			)
+			))
 			quit()
 	# END for
 	
@@ -158,9 +158,9 @@ def rtcZV(V, I, K, **params):
 		'w': 0.5, 'rho0': 1.0E-3
 	}
 	# Handle keyword arguments
-	for k in dparams.keys():
+	for k in list(dparams.keys()):
 		# Set all missing keyword arguments to their default values
-		if k not in params.keys():
+		if k not in list(params.keys()):
 			params[k] = dparams[k]
 		elif type(params[k]).__name__ != type(dparams[k]).__name__:
 			raise TypeError(
@@ -260,7 +260,7 @@ def rtcZV(V, I, K, **params):
 		T = zeros(K+1)
 		# iteratively solve for all orders of taylor coefficients for z
 		for k in range(0, K):
-			W2[k] = rtc.prod(-rz, W1, k)
+			W2[k] = rtc.prod(-rz, W1, k=k)
 			
 			# T = e^W2
 			if k == 0:
@@ -270,7 +270,7 @@ def rtcZV(V, I, K, **params):
 					T[k] += Q[j,k] * W2[k-j] * T[j]
 			
 			# z' = Cst*rhos*T - Cz*z
-			rz[k+1] = ( Cst*rtc.prod(rhos, T, k) - Cz*rz[k] )/(k+1)
+			rz[k+1] = ( Cst*rtc.prod(rhos, T, k=k) - Cz*rz[k] )/(k+1)
 		
 		# build up z at the next V point as a Taylor approximation of the
 		#  function out from the previous points

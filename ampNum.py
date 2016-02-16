@@ -10,7 +10,7 @@
 		numpy
 '''
 
-import numpy as np
+import scipy as np
 
 #===============================================================================
 def central_diff(X, Y):
@@ -53,7 +53,7 @@ def nn_smooth(Y, window_size):
 	sY = np.zeros(L)
 	try:
 		window_size = np.abs(np.int(window_size))
-	except ValueError, msg:
+	except ValueError as msg:
 		raise ValueError('window_size must be of type int')
 	if window_size % 2 != 1 or window_size < 1:
 		raise ValueError("window_size size must be an odd number")
@@ -98,7 +98,7 @@ def sgSm(y, window_size, order, deriv=0):
 	try:
 		window_size = np.abs(np.int(window_size))
 		order = np.abs(np.int(order))
-	except ValueError, msg:
+	except ValueError as msg:
 		raise ValueError("window_size and order have to be of type int")
 	# END try
 	if window_size % 2 != 1 or window_size < 1:
@@ -106,7 +106,7 @@ def sgSm(y, window_size, order, deriv=0):
 	if window_size < order + 2:
 		raise TypeError("window_size is too small for the polynomials order")
 	
-	order_range = range(order+1)
+	order_range = list(range(order+1))
 	half_window = (window_size -1) / 2
 	
 	# precompute coefficients

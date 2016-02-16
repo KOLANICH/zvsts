@@ -7,7 +7,7 @@
 '''
 
 # third-party modules
-import numpy as np
+import scipy as np
 
 #==============================================================================
 def const(k):
@@ -183,8 +183,7 @@ def power(U, a, approx='none'):
 # END power
 
 #==============================================================================
-@profile
-def prod(U, V, approx='none', *args):
+def prod(U, V, approx='none', k=None):
     '''Evaluate derivatives of f(u,v) = u*v
     U: ndarray, taylor coefficients
     V: ndarray, taylor coefficients
@@ -200,7 +199,7 @@ def prod(U, V, approx='none', *args):
         approx = 'ulin'
     
     # If no k is given calculate all derivatives possible
-    if len(args) == 0:
+    if k==None:
         k = len(U) - 1
         Y = np.zeros(k+1)
         
@@ -223,7 +222,6 @@ def prod(U, V, approx='none', *args):
         return Y
     # If k is given calculate only that derivative
     else:
-        k = args[0]
         y = 0.0
         
         if approx == 'none':
@@ -248,7 +246,6 @@ def prod(U, V, approx='none', *args):
 # END prod
 
 #==============================================================================
-@profile
 def sin(X, approx='none'):
     '''Evaluate derivatives of f(u) = sin(u)
     X: ndarray, taylor coefficient array
@@ -410,7 +407,6 @@ def sqrt(U, approx='none', *args):
 # END sqrt
 
 #==============================================================================
-@profile
 def test():
     N = 200
     X = np.array([ np.linspace(-6.5, 6.5, N),
